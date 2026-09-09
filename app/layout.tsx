@@ -18,6 +18,7 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "Sacrament Meeting Planner",
   description: "Plan, manage, and review sacrament meeting agendas.",
+  colorScheme: "light",
 };
 
 export default function RootLayout({
