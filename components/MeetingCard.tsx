@@ -9,7 +9,7 @@ export default function MeetingCard({ meeting }: MeetingCardProps) {
   return (
     <article className="p-4 border-l-4 border-emerald-800 bg-gray-50 rounded mb-4">
       <h2 className="text-lg font-bold text-gray-900 mb-1">
-        {new Date(meeting.date).toLocaleDateString('en-US', {
+        {new Date(meeting.date + 'T00:00:00').toLocaleDateString('en-US', {
           weekday: 'long',
           month: 'long',
           day: 'numeric',

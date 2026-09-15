@@ -1,5 +1,5 @@
 import { redirect } from "next/navigation";
-import { meetings } from "@/lib/meetings-db";
+import { getMeetings } from "@/lib/meetings-db";
 
 function getMostRecentSunday(): string {
   const today = new Date();
@@ -9,8 +9,9 @@ function getMostRecentSunday(): string {
   return sunday.toISOString().split("T")[0];
 }
 
-export default function CurrentMeetingPage() {
+export default async function CurrentMeetingPage() {
   const targetDate = getMostRecentSunday();
+  const meetings = await getMeetings();
 
   const exactMatch = meetings.find((m) => m.date === targetDate);
 

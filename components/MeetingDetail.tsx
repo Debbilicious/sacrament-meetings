@@ -8,7 +8,7 @@ export default function MeetingDetail({ meeting }: MeetingDetailProps) {
   return (
     <article className="max-w-2xl mx-auto bg-gray-50 border border-gray-200 rounded-lg p-6">
       <h1 className="text-2xl font-bold text-gray-900 mb-2">
-        {new Date(meeting.date).toLocaleDateString('en-US', {
+        {new Date(meeting.date + 'T00:00:00').toLocaleDateString('en-US', {
           weekday: 'long',
           month: 'long',
           day: 'numeric',

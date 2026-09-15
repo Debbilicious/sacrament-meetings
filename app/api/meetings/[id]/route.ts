@@ -1,7 +1,6 @@
 import { NextResponse } from 'next/server';
 import { getMeetingById } from '@/lib/meetings-db';
 
-// GET /api/meetings/1
 export async function GET(
   _request: Request,
   { params }: { params: Promise<{ id: string }> }
@@ -13,7 +12,7 @@ export async function GET(
     return NextResponse.json({ error: 'Invalid id' }, { status: 400 });
   }
 
-  const meeting = getMeetingById(id);
+  const meeting = await getMeetingById(id);
 
   if (!meeting) {
     return NextResponse.json({ error: 'Not found' }, { status: 404 });

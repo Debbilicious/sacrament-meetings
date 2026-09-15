@@ -2,7 +2,7 @@ import MeetingCard from "@/components/MeetingCard";
 import { getMeetings } from "@/lib/meetings-db";
 
 export default async function MeetingsPage() {
-  const meetings = getMeetings();
+  const meetings = await getMeetings();
 
   return (
     <div className="py-12">

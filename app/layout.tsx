@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import Header from "@/components/Header";
@@ -18,6 +18,9 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "Sacrament Meeting Planner",
   description: "Plan, manage, and review sacrament meeting agendas.",
+};
+
+export const viewport: Viewport = {
   colorScheme: "light",
 };
 
