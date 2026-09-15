@@ -3,6 +3,8 @@ import { SacramentMeeting } from './types';
 
 const sql = neon(process.env.DATABASE_URL!);
 
+const ITEMS_PER_PAGE = 5;
+
 function mapRowToMeeting(row: any): SacramentMeeting {
   return {
     id: row.id,
@@ -37,6 +39,36 @@ export async function getMeetingById(id: number): Promise<SacramentMeeting | nul
   const rows = await sql`SELECT * FROM meetings WHERE id = ${id}`;
   if (rows.length === 0) return null;
   return mapRowToMeeting(rows[0]);
+}
+
+export async function fetchFilteredMeetings(query: string, currentPage: number): Promise<SacramentMeeting[]> {
+  const offset = (currentPage - 1) * ITEMS_PER_PAGE;
+  const searchTerm = `%${query}%`;
+
+  const rows = await sql`
+    SELECT * FROM meetings
+    WHERE presiding ILIKE ${searchTerm}
+       OR conducting ILIKE ${searchTerm}
+       OR meeting_type ILIKE ${searchTerm}
+       OR speakers::text ILIKE ${searchTerm}
+    ORDER BY date
+    LIMIT ${ITEMS_PER_PAGE} OFFSET ${offset}
+  `;
+  return rows.map(mapRowToMeeting);
+}
+
+export async function fetchMeetingsPages(query: string): Promise<number> {
+  const searchTerm = `%${query}%`;
+
+  const rows = await sql`
+    SELECT COUNT(*) FROM meetings
+    WHERE presiding ILIKE ${searchTerm}
+       OR conducting ILIKE ${searchTerm}
+       OR meeting_type ILIKE ${searchTerm}
+       OR speakers::text ILIKE ${searchTerm}
+  `;
+  const count = Number(rows[0].count);
+  return Math.ceil(count / ITEMS_PER_PAGE);
 }
 
 // Stub functions - will be wired to the database in Week 04
