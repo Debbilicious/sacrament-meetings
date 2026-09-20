@@ -3,15 +3,32 @@ import { SacramentMeeting } from './types';
 
 const sql = neon(process.env.DATABASE_URL!);
 
+interface MeetingRow {
+  id: number;
+  date: string | Date;
+  meeting_type: string;
+  presiding: string;
+  conducting: string;
+  announcements: string[] | null;
+  opening_hymn: { number: number; title: string };
+  opening_prayer: string;
+  ward_business: { description: string }[] | null;
+  stake_business: boolean;
+  sacrament_hymn: { number: number; title: string };
+  speakers: { name: string; topic: string; type: 'speaker' | 'musical-number' }[] | null;
+  closing_hymn: { number: number; title: string };
+  closing_prayer: string;
+}
+
 const ITEMS_PER_PAGE = 5;
 
-function mapRowToMeeting(row: any): SacramentMeeting {
+function mapRowToMeeting(row: MeetingRow): SacramentMeeting {
   return {
     id: row.id,
     date: row.date instanceof Date
       ? `${row.date.getFullYear()}-${String(row.date.getMonth() + 1).padStart(2, '0')}-${String(row.date.getDate()).padStart(2, '0')}`
       : row.date,
-    meetingType: row.meeting_type,
+    meetingType: row.meeting_type as SacramentMeeting['meetingType'],
     presiding: row.presiding,
     conducting: row.conducting,
     announcements: row.announcements ?? [],
@@ -29,16 +46,16 @@ function mapRowToMeeting(row: any): SacramentMeeting {
 export async function getMeetings(date?: string | null): Promise<SacramentMeeting[]> {
   if (date) {
     const rows = await sql`SELECT * FROM meetings WHERE date = ${date} ORDER BY date`;
-    return rows.map(mapRowToMeeting);
+    return (rows as MeetingRow[]).map(mapRowToMeeting);
   }
   const rows = await sql`SELECT * FROM meetings ORDER BY date`;
-  return rows.map(mapRowToMeeting);
+  return (rows as MeetingRow[]).map(mapRowToMeeting);
 }
 
 export async function getMeetingById(id: number): Promise<SacramentMeeting | null> {
   const rows = await sql`SELECT * FROM meetings WHERE id = ${id}`;
   if (rows.length === 0) return null;
-  return mapRowToMeeting(rows[0]);
+  return mapRowToMeeting(rows[0] as MeetingRow);
 }
 
 export async function fetchFilteredMeetings(query: string, currentPage: number): Promise<SacramentMeeting[]> {
@@ -54,7 +71,7 @@ export async function fetchFilteredMeetings(query: string, currentPage: number):
     ORDER BY date
     LIMIT ${ITEMS_PER_PAGE} OFFSET ${offset}
   `;
-  return rows.map(mapRowToMeeting);
+  return (rows as MeetingRow[]).map(mapRowToMeeting);
 }
 
 export async function fetchMeetingsPages(query: string): Promise<number> {
@@ -69,17 +86,4 @@ export async function fetchMeetingsPages(query: string): Promise<number> {
   `;
   const count = Number(rows[0].count);
   return Math.ceil(count / ITEMS_PER_PAGE);
-}
-
-// Stub functions - will be wired to the database in Week 04
-export async function addMeeting(meeting: Omit<SacramentMeeting, 'id'>): Promise<SacramentMeeting> {
-  throw new Error('addMeeting not yet implemented - coming in Week 04');
-}
-
-export async function updateMeeting(id: number, meeting: Partial<SacramentMeeting>): Promise<SacramentMeeting | null> {
-  throw new Error('updateMeeting not yet implemented - coming in Week 04');
-}
-
-export async function deleteMeeting(id: number): Promise<boolean> {
-  throw new Error('deleteMeeting not yet implemented - coming in Week 04');
 }
