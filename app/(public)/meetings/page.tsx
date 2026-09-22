@@ -1,7 +1,7 @@
 import MeetingCard from "@/components/MeetingCard";
 import MeetingSearch from "@/components/MeetingSearch";
 import Pagination from "@/components/Pagination";
-import { fetchFilteredMeetings, fetchMeetingsPages } from "@/lib/meetings-db";
+import { fetchFilteredMeetings, getMeetingsTotalPages } from "@/lib/meetings-db";
 
 export const dynamic = 'force-dynamic';
 
@@ -13,7 +13,7 @@ export default async function MeetingsPage(props: {
   const currentPage = Number(searchParams?.page) || 1;
 
   const meetings = await fetchFilteredMeetings(query, currentPage);
-  const totalPages = await fetchMeetingsPages(query);
+  const totalPages = await getMeetingsTotalPages(query);
 
   return (
     <div className="py-12">

@@ -74,7 +74,7 @@ export async function fetchFilteredMeetings(query: string, currentPage: number):
   return (rows as MeetingRow[]).map(mapRowToMeeting);
 }
 
-export async function fetchMeetingsPages(query: string): Promise<number> {
+export async function getMeetingsTotalPages(query: string): Promise<number> {
   const searchTerm = `%${query}%`;
 
   const rows = await sql`
