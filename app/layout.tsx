@@ -16,8 +16,12 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Sacrament Meeting Planner",
-  description: "Plan, manage, and review sacrament meeting agendas.",
+  title: {
+    default: "Sacrament Meeting Planner",
+    template: "%s | Sacrament Meeting Planner",
+  },
+  description: "Plan, manage, and review sacrament meeting agendas for Riverside Ward.",
+  metadataBase: new URL("https://sacrament-meetings-git-main-debbilicious.vercel.app"),
 };
 
 export const viewport: Viewport = {

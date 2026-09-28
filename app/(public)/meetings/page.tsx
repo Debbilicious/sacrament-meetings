@@ -1,7 +1,13 @@
+import type { Metadata } from "next";
 import MeetingCard from "@/components/MeetingCard";
 import MeetingSearch from "@/components/MeetingSearch";
 import Pagination from "@/components/Pagination";
 import { fetchFilteredMeetings, getMeetingsTotalPages } from "@/lib/meetings-db";
+
+export const metadata: Metadata = {
+  title: "All Meetings",
+  description: "Browse and search all sacrament meeting programs, filterable by presiding leader, conductor, or meeting type.",
+};
 
 export const dynamic = 'force-dynamic';
 
